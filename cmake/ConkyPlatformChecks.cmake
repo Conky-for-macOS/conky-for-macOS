@@ -394,7 +394,7 @@ if(BUILD_X11)
     endif(NOT APP_PATCH)
   endif(BUILD_LUA_CAIRO)
   if(BUILD_LUA_IMLIB2)
-    pkg_search_module(IMLIB2 REQUIRED imlib2 Imlib2)
+    pkg_search_module(IMLIB2 REQUIRED imlib2-xlib imlib2 Imlib2)
     set(luaimlib2_libs ${IMLIB2_LIBS} ${IMLIB2_LDFLAGS} ${LUA_LIBRARIES})
     set(luaimlib2_includes
         ${IMLIB2_INCLUDE_DIRS}
