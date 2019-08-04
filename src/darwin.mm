@@ -69,6 +69,7 @@
 #include "darwin_sip.h"  // sip status
 
 #include <vector>
+#include <map>
 #include "diskio.h"
 
 #include <IOKit/IOKitLib.h>
@@ -1131,19 +1132,18 @@ char get_freq(char *p_client_buffer, size_t client_buffer_size,
   return 1;
 }
 
-void getDISKcounters(io_iterator_t drivelist, UInt64 *readBytes = 0, UInt64 *writeBytes = 0)
-{
-    io_registry_entry_t drive   = 0;
-  
+// used code from: https://stackoverflow.com/questions/11962296/how-can-i-retrieve-read-write-disk-info
+void getDISKcounters(io_iterator_t drive, std::string& dev, UInt64 *readBytes = 0, UInt64 *writeBytes = 0) {
     CFNumberRef     number      = 0;
     CFDictionaryRef properties  = 0;
     CFDictionaryRef statistics  = 0;
   
-    drive = IOIteratorNext(drivelist);
-  
     /* Obtain the properties for this drive object */
     IORegistryEntryCreateCFProperties(drive, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
-    
+  
+    /* Obtain device name */
+  
+  
     /* Obtain the statistics from the drive properties */
     statistics = (CFDictionaryRef) CFDictionaryGetValue(properties, CFSTR(kIOBlockStorageDriverStatisticsKey));
     
@@ -1166,19 +1166,15 @@ void getDISKcounters(io_iterator_t drivelist, UInt64 *readBytes = 0, UInt64 *wri
     IOObjectRelease(drive); drive = 0;
 }
 
-int update_diskio() {
-  // used code from: https://stackoverflow.com/questions/11962296/how-can-i-retrieve-read-write-disk-info
+void getAllDISKCounters(void) {
+  io_registry_entry_t drive   = 0;
   
-  struct diskio_stat *cur = nullptr;
-
   UInt64 reads = 0, writes = 0;
   UInt64 total_reads = 0, total_writes = 0;
-
+  
   io_iterator_t drivelist  = IO_OBJECT_NULL;
   mach_port_t masterPort = IO_OBJECT_NULL;
   
-  stats.current = stats.current_read = stats.current_write = 0;
-
   /* get ports and services for drive stats */
   /* Obtain the I/O Kit communication handle */
   IOMasterPort(bootstrap_port, &masterPort);
@@ -1187,21 +1183,38 @@ int update_diskio() {
   IOServiceGetMatchingServices(masterPort,
                                IOServiceMatching("IOBlockStorageDriver"),
                                &drivelist);
-
-  for (cur = stats.next; cur != nullptr; cur = cur->next) {
+  
+  /* Get statistics for each drive */
+  while ((drive = IOIteratorNext(drivelist)))
+  {
+    std::string dev;
     
-    /* get reads & writes in bytes for current drive */
-    getDISKcounters(drivelist, &reads, &writes);
+    /* get reads & writes in bytes for current drive; also dev */
+    getDISKcounters(drive, dev, &reads, &writes);
+
+    struct diskio_stat *cur = nullptr;
+
+    for (cur = stats.next; cur; cur = cur->next) {
+      if (cur->dev && !strcmp(dev.c_str(), cur->dev)) {
+        update_diskio_values(cur, reads, writes);
+        break;
+      }
+    }
     
     total_reads += (reads /= 512);
     total_writes += (writes /= 512);
-    
-    update_diskio_values(cur, reads, writes);
   }
 
   update_diskio_values(&stats, total_reads, total_writes);
-
+  
   IOIteratorReset(drivelist);
+}
+
+int update_diskio() {
+  stats.current = stats.current_read = stats.current_write = 0;
+  
+  /* Get statistics for all disks */
+  getAllDISKCounters();
 
   return 0;
 }
