@@ -1131,6 +1131,8 @@ char get_freq(char *p_client_buffer, size_t client_buffer_size,
   return 1;
 }
 
+std::string get_dev_for_drive(const io_registry_entry_t& drive) {
+  io_iterator_t iter = IO_OBJECT_NULL;
   io_registry_entry_t driv = 0;
   CFDictionaryRef properties  = 0;
   CFStringRef *bsd_name;
