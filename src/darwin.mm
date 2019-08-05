@@ -1131,31 +1131,37 @@ char get_freq(char *p_client_buffer, size_t client_buffer_size,
   return 1;
 }
 
+std::string string_from_cfstring(CFStringRef cfstring) {
+  CFIndex bufferSize = CFStringGetLength(cfstring) + 1; // The +1 is for having space for the string to be NUL terminated
+  char buffer[bufferSize];
+
+  if (CFStringGetCString(cfstring, buffer, bufferSize, kCFStringEncodingUTF8)) {
+    if (buffer) {
+      return std::string (buffer);
+    }
+  }
+  return "";
+}
+
 std::string get_dev_for_drive(const io_registry_entry_t& drive) {
   io_iterator_t iter = IO_OBJECT_NULL;
   io_registry_entry_t driv = 0;
   CFDictionaryRef properties  = 0;
-  CFStringRef *bsd_name;
-  std::string dev = "";
+  CFStringRef bsd_name;
+  std::string dev;
   
   IORegistryEntryGetChildIterator(drive, kIOServicePlane, &iter);
   
   while((driv = IOIteratorNext(iter)))
   {
-    //    printf("Found sub-drive!\n");
-    
     /* Obtain the properties for this drive object */
     IORegistryEntryCreateCFProperties(driv, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
     
-    int count = CFDictionaryGetCount(properties);
-    
-    CFTypeRef *keys = (CFTypeRef *)malloc( count * sizeof(CFTypeRef) );
-    
-    CFDictionaryGetKeysAndValues(properties, (const void **)keys, nullptr);
-    
-    bsd_name = (CFStringRef *)CFDictionaryGetValue(properties, CFSTR("BSD Name"));
+    /* Obtain BSD Name */
+    bsd_name = (CFStringRef)CFDictionaryGetValue(properties, CFSTR("BSD Name"));
 
-    // XXX convert to std::string and return
+    /* Convert to std::string */
+    dev = string_from_cfstring(bsd_name);
   }
 
   /* Cleanup */
