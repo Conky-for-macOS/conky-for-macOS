@@ -1156,17 +1156,20 @@ std::string get_dev_for_drive(const io_registry_entry_t& drive) {
   {
     /* Obtain the properties for this drive object */
     IORegistryEntryCreateCFProperties(driv, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
-    
+
     /* Obtain BSD Name */
-    bsd_name = (CFStringRef)CFDictionaryGetValue(properties, CFSTR("BSD Name"));
+    bsd_name = (CFStringRef) CFDictionaryGetValue(properties, CFSTR("BSD Name"));
 
     /* Convert to std::string */
     dev = string_from_cfstring(bsd_name);
+    
+    /* Release resources */
+    CFRelease(properties);
   }
 
-  /* Cleanup */
-  //  CFRelease(properties); properties = 0;
-  //  IOObjectRelease(driv); driv = 0;
+  /* Release resources */
+  IOObjectRelease(driv); driv = 0;
+  IOIteratorReset(iter);
   
   return dev;
 }
