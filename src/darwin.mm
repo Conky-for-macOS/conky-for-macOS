@@ -1197,7 +1197,7 @@ void getDISKcounters(io_iterator_t drive, std::string& dev, UInt64 *readBytes = 
       }
       
       /* Obtain the number of bytes written from the drive statistics */
-      number = (CFNumberRef) CFDictionaryGetValue (statistics, CFSTR(kIOBlockStorageDriverStatisticsBytesWrittenKey));
+      number = (CFNumberRef) CFDictionaryGetValue(statistics, CFSTR(kIOBlockStorageDriverStatisticsBytesWrittenKey));
       if (number) {
         CFNumberGetValue(number, kCFNumberSInt64Type, writeBytes);
       }
@@ -1233,8 +1233,6 @@ void getAllDISKCounters(void) {
     
     /* get reads & writes in bytes for current drive; also dev */
     getDISKcounters(drive, dev, &reads, &writes);
-    
-    printf("Got dev: %s\n", dev.c_str());
 
     /* Traverse our list of stats-per-device and if we have new statistics update it */
     for (struct diskio_stat *cur = stats.next; cur; cur = cur->next) {
