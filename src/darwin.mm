@@ -69,7 +69,6 @@
 #include "darwin_sip.h"  // sip status
 
 #include <vector>
-#include <map>
 #include "diskio.h"
 
 #include <IOKit/IOKitLib.h>
@@ -1132,6 +1131,38 @@ char get_freq(char *p_client_buffer, size_t client_buffer_size,
   return 1;
 }
 
+  io_registry_entry_t driv = 0;
+  CFDictionaryRef properties  = 0;
+  CFStringRef *bsd_name;
+  std::string dev = "";
+  
+  IORegistryEntryGetChildIterator(drive, kIOServicePlane, &iter);
+  
+  while((driv = IOIteratorNext(iter)))
+  {
+    //    printf("Found sub-drive!\n");
+    
+    /* Obtain the properties for this drive object */
+    IORegistryEntryCreateCFProperties(driv, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
+    
+    int count = CFDictionaryGetCount(properties);
+    
+    CFTypeRef *keys = (CFTypeRef *)malloc( count * sizeof(CFTypeRef) );
+    
+    CFDictionaryGetKeysAndValues(properties, (const void **)keys, nullptr);
+    
+    bsd_name = (CFStringRef *)CFDictionaryGetValue(properties, CFSTR("BSD Name"));
+
+    // XXX convert to std::string and return
+  }
+
+  /* Cleanup */
+  //  CFRelease(properties); properties = 0;
+  //  IOObjectRelease(driv); driv = 0;
+  
+  return dev;
+}
+
 // used code from: https://stackoverflow.com/questions/11962296/how-can-i-retrieve-read-write-disk-info
 void getDISKcounters(io_iterator_t drive, std::string& dev, UInt64 *readBytes = 0, UInt64 *writeBytes = 0) {
     CFNumberRef     number      = 0;
@@ -1142,11 +1173,11 @@ void getDISKcounters(io_iterator_t drive, std::string& dev, UInt64 *readBytes = 
     IORegistryEntryCreateCFProperties(drive, (CFMutableDictionaryRef *) &properties, kCFAllocatorDefault, kNilOptions);
   
     /* Obtain device name */
-  
+    dev = get_dev_for_drive(drive);
   
     /* Obtain the statistics from the drive properties */
     statistics = (CFDictionaryRef) CFDictionaryGetValue(properties, CFSTR(kIOBlockStorageDriverStatisticsKey));
-    
+  
     if (statistics) {
       /* Obtain the number of bytes read from the drive statistics */
       number = (CFNumberRef) CFDictionaryGetValue(statistics, CFSTR(kIOBlockStorageDriverStatisticsBytesReadKey));
@@ -1191,10 +1222,11 @@ void getAllDISKCounters(void) {
     
     /* get reads & writes in bytes for current drive; also dev */
     getDISKcounters(drive, dev, &reads, &writes);
+    
+    printf("Got dev: %s\n", dev.c_str());
 
-    struct diskio_stat *cur = nullptr;
-
-    for (cur = stats.next; cur; cur = cur->next) {
+    /* Traverse our list of stats-per-device and if we have new statistics update it */
+    for (struct diskio_stat *cur = stats.next; cur; cur = cur->next) {
       if (cur->dev && !strcmp(dev.c_str(), cur->dev)) {
         update_diskio_values(cur, reads, writes);
         break;
