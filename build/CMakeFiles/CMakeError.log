@@ -1,0 +1,95 @@
+Determining if files sys/statfs.h exist failed with the following output:
+Change Dir: /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_a1a6a/fast && /Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_a1a6a.dir/build.make CMakeFiles/cmTC_a1a6a.dir/build
+Building C object CMakeFiles/cmTC_a1a6a.dir/HAVE_SYS_STATFS_H.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -std=c99  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.14   -o CMakeFiles/cmTC_a1a6a.dir/HAVE_SYS_STATFS_H.c.o   -c /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_STATFS_H.c
+/Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_STATFS_H.c:2:10: fatal error: 'sys/statfs.h' file not found
+#include <sys/statfs.h>
+         ^~~~~~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_a1a6a.dir/HAVE_SYS_STATFS_H.c.o] Error 1
+make: *** [cmTC_a1a6a/fast] Error 2
+
+
+Source:
+/* */
+#include <sys/statfs.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/inotify.h exist failed with the following output:
+Change Dir: /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_dd0cd/fast && /Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_dd0cd.dir/build.make CMakeFiles/cmTC_dd0cd.dir/build
+Building C object CMakeFiles/cmTC_dd0cd.dir/HAVE_SYS_INOTIFY_H.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -std=c99  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.14   -o CMakeFiles/cmTC_dd0cd.dir/HAVE_SYS_INOTIFY_H.c.o   -c /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_INOTIFY_H.c
+/Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CheckIncludeFiles/HAVE_SYS_INOTIFY_H.c:2:10: fatal error: 'sys/inotify.h' file not found
+#include <sys/inotify.h>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_dd0cd.dir/HAVE_SYS_INOTIFY_H.c.o] Error 1
+make: *** [cmTC_dd0cd/fast] Error 2
+
+
+Source:
+/* */
+#include <sys/inotify.h>
+
+
+int main(void){return 0;}
+
+Determining if the pipe2 exist failed with the following output:
+Change Dir: /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_789fd/fast && /Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_789fd.dir/build.make CMakeFiles/cmTC_789fd.dir/build
+Building C object CMakeFiles/cmTC_789fd.dir/CheckSymbolExists.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -std=c99  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.14   -o CMakeFiles/cmTC_789fd.dir/CheckSymbolExists.c.o   -c /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+/Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:8:19: error: use of undeclared identifier 'pipe2'; did you mean 'pipe'?
+  return ((int*)(&pipe2))[argc];
+                  ^~~~~
+                  pipe
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/usr/include/unistd.h:470:6: note: 'pipe' declared here
+int      pipe(int [2]);
+         ^
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_789fd.dir/CheckSymbolExists.c.o] Error 1
+make: *** [cmTC_789fd/fast] Error 2
+
+
+File /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <unistd.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pipe2
+  return ((int*)(&pipe2))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if files sys/soundcard.h exist failed with the following output:
+Change Dir: /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_4e34b/fast && /Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTC_4e34b.dir/build.make CMakeFiles/cmTC_4e34b.dir/build
+Building C object CMakeFiles/cmTC_4e34b.dir/HAVE_SOME_SOUNDCARD_H.c.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc   -std=c99  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk -mmacosx-version-min=10.14   -o CMakeFiles/cmTC_4e34b.dir/HAVE_SOME_SOUNDCARD_H.c.o   -c /Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CheckIncludeFiles/HAVE_SOME_SOUNDCARD_H.c
+/Users/npyl/Documents/Manage-Conky/conky-for-macOS/build/CMakeFiles/CheckIncludeFiles/HAVE_SOME_SOUNDCARD_H.c:2:10: fatal error: 'sys/soundcard.h' file not found
+#include <sys/soundcard.h>
+         ^~~~~~~~~~~~~~~~~
+1 error generated.
+make[1]: *** [CMakeFiles/cmTC_4e34b.dir/HAVE_SOME_SOUNDCARD_H.c.o] Error 1
+make: *** [cmTC_4e34b/fast] Error 2
+
+
+Source:
+/* */
+#include <sys/soundcard.h>
+
+
+int main(void){return 0;}
+
